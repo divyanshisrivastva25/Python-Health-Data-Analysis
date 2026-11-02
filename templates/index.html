@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Analytics Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-icon">✚</span><div><b>Health<span>Lens</span></b><small>Patient analytics</small></div></div>
+      <div class="side-label">WORKSPACE</div>
+      <a class="nav active" href="#overview">▦ &nbsp; Overview</a>
+      <a class="nav" href="#patients">▤ &nbsp; Patient records</a>
+      <a class="nav" href="#charts">▥ &nbsp; Visualizations</a>
+      <div class="sidebar-note"><b>Demo dataset</b><p>15 synthetic patient records. This dashboard is for educational demonstration, not clinical decision-making.</p></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div><div class="eyebrow">HEALTH DATA / OVERVIEW</div><h1>Health Analytics Dashboard</h1><p class="sub">Explore patient records, summary statistics and visual patterns.</p></div>
+        <div class="top-actions"><span class="status-dot"></span><span>Backend connected</span></div>
+      </header>
+
+      <section class="filters panel">
+        <div><label for="genderFilter">Gender</label><select id="genderFilter"><option>All</option><option>Male</option><option>Female</option></select></div>
+        <div><label for="patientSearch">Search patient ID</label><input id="patientSearch" type="search" placeholder="e.g. 4"></div>
+        <button id="resetBtn" class="secondary-btn">Reset filters</button>
+        <div class="filter-hint">Filters update the dashboard automatically.</div>
+      </section>
+
+      <section id="overview">
+        <div class="section-heading"><div><h2>Key indicators</h2><p>Calculated from the selected patient records</p></div></div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-top"><span>Total patients</span><span class="stat-icon blue">♙</span></div><strong id="total">—</strong><small>Records in current view</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Average age</span><span class="stat-icon purple">◷</span></div><strong id="avgAge">—</strong><small>Years</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Average blood pressure</span><span class="stat-icon orange">♡</span></div><strong id="avgBp">—</strong><small>mmHg</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Average cholesterol</span><span class="stat-icon green">⌁</span></div><strong id="avgChol">—</strong><small>mg/dL</small></article>
+        </div>
+      </section>
+
+      <section id="charts">
+        <div class="section-heading"><div><h2>Data visualizations</h2><p>Charts refresh when you change the filters.</p></div></div>
+        <div class="chart-grid">
+          <article class="panel chart-card"><div class="card-heading"><div><h3>Age distribution</h3><p>Number of patients by age range</p></div><span class="chart-tag">Histogram</span></div><div class="canvas-wrap"><canvas id="ageChart"></canvas></div><a class="download-link" href="/api/matplotlib/age.png" target="_blank">Open Matplotlib chart ↗</a></article>
+          <article class="panel chart-card"><div class="card-heading"><div><h3>Average blood pressure by gender</h3><p>Mean blood pressure for each group</p></div><span class="chart-tag">Bar chart</span></div><div class="canvas-wrap"><canvas id="genderChart"></canvas></div><a class="download-link" href="/api/matplotlib/gender-bp.png" target="_blank">Open Matplotlib chart ↗</a></article>
+          <article class="panel chart-card"><div class="card-heading"><div><h3>Age vs blood pressure</h3><p>Relationship between age and blood pressure</p></div><span class="chart-tag">Scatter plot</span></div><div class="canvas-wrap"><canvas id="bpChart"></canvas></div><a class="download-link" href="/api/matplotlib/age-bp.png" target="_blank">Open Matplotlib chart ↗</a></article>
+          <article class="panel chart-card"><div class="card-heading"><div><h3>Age vs cholesterol</h3><p>Relationship between age and cholesterol</p></div><span class="chart-tag">Scatter plot</span></div><div class="canvas-wrap"><canvas id="cholChart"></canvas></div><a class="download-link" href="/api/matplotlib/age-cholesterol.png" target="_blank">Open Matplotlib chart ↗</a></article>
+        </div>
+      </section>
+
+      <section id="patients" class="panel table-panel">
+        <div class="section-heading table-heading"><div><h2>Patient records</h2><p>Cleaned data with missing numeric values replaced by column averages.</p></div><span id="recordCount" class="record-pill">15 records</span></div>
+        <div class="table-scroll"><table><thead><tr><th>Patient ID</th><th>Age</th><th>Gender</th><th>Blood pressure</th><th>Cholesterol</th><th>Heart rate</th></tr></thead><tbody id="patientRows"><tr><td colspan="6">Loading records...</td></tr></tbody></table></div>
+      </section>
+
+      <section class="alerts-grid">
+        <article class="panel alert-card"><div class="card-heading"><div><h3>Blood pressure readings ≥ 140</h3><p>Rows meeting the project's filter threshold</p></div><span class="alert-count" id="highBpCount">0</span></div><div id="highBpList" class="alert-list"></div></article>
+        <article class="panel alert-card"><div class="card-heading"><div><h3>Cholesterol readings ≥ 240</h3><p>Rows meeting the project's filter threshold</p></div><span class="alert-count" id="highCholCount">0</span></div><div id="highCholList" class="alert-list"></div></article>
+      </section>
+      <footer>Educational sample only · Not for diagnosis or treatment decisions.</footer>
+    </main>
+  </div>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
